@@ -1,13 +1,13 @@
 "use client"
 
-import { useState } from "react"
-import { useActionState } from "react"
+import { useState, useEffect, useActionState } from "react"
 import { useFormStatus } from "react-dom"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Loader2, Plus } from "lucide-react"
+import { getTelegramWebAppData } from "@/lib/telegram/auth"
 
 interface BirthChartFormProps {
   onSubmit: (formData: FormData) => Promise<any>
@@ -64,6 +64,13 @@ export default function BirthChartForm({ onSubmit, userName }: BirthChartFormPro
   const [hours, setHours] = useState("")
   const [minutes, setMinutes] = useState("")
   const [location, setLocation] = useState("")
+
+  useEffect(() => {
+    const telegramData = getTelegramWebAppData()
+    if (telegramData?.first_name) {
+      setName(telegramData.first_name)
+    }
+  }, [])
 
   return (
     <div className="max-w-md mx-auto">
