@@ -7,10 +7,10 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { Separator } from "@/components/ui/separator"
-import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/hooks/use-toast"
 import { createClient } from "@/lib/supabase/client"
-import { User, Bell, Palette, Shield, Trash2 } from "lucide-react"
+import { User, Bell, Shield, Trash2, ArrowLeft, Sparkles, Heart, Settings, MoreHorizontal } from "lucide-react"
+import Link from "next/link"
 
 export default function SettingsPage() {
   const [user, setUser] = useState<any>(null)
@@ -90,177 +90,171 @@ export default function SettingsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 py-8">
-        <div className="max-w-4xl mx-auto px-4">
-          <div className="animate-pulse space-y-6">
-            <div className="h-8 bg-gray-200 rounded w-1/3"></div>
-            <div className="h-64 bg-gray-200 rounded"></div>
-          </div>
+      <div className="min-h-screen bg-gradient-to-br from-pink-200 via-purple-200 to-indigo-200 pb-20">
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-800"></div>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 py-8">
-      <div className="max-w-4xl mx-auto px-4">
-        <div className="mb-8">
-          <h1 className="text-3xl font-serif font-bold text-gray-900 mb-2">Настройки</h1>
-          <p className="text-gray-600">Управляйте своими предпочтениями и настройками приложения</p>
+    <div className="min-h-screen bg-gradient-to-br from-pink-200 via-purple-200 to-indigo-200 pb-20">
+      {/* Header */}
+      <div className="flex items-center justify-between p-6 pt-12">
+        <Link href="/">
+          <Button variant="ghost" size="icon" className="text-gray-900">
+            <ArrowLeft className="h-6 w-6" />
+          </Button>
+        </Link>
+        <h1 className="text-2xl font-bold text-gray-900">Настройки</h1>
+        <div className="w-10" />
+      </div>
+
+      <div className="px-6 space-y-4">
+        {/* Profile Settings */}
+        <Card className="bg-white/95 backdrop-blur-sm border-0 shadow-xl">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <User className="h-5 w-5 text-purple-600" />
+              Профиль
+            </CardTitle>
+            <CardDescription>Основная информация о вашем профиле</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="fullName">Полное имя</Label>
+              <Input
+                id="fullName"
+                value={settings.fullName}
+                onChange={(e) => setSettings({ ...settings, fullName: e.target.value })}
+                placeholder="Введите ваше имя"
+                className="bg-white/50"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label>Email</Label>
+              <Input value={user?.email || ""} disabled className="bg-gray-100" />
+              <p className="text-sm text-gray-500">Email нельзя изменить</p>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Notification Settings */}
+        <Card className="bg-white/95 backdrop-blur-sm border-0 shadow-xl">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <Bell className="h-5 w-5 text-pink-500" />
+              Уведомления
+            </CardTitle>
+            <CardDescription>Настройте, какие уведомления вы хотите получать</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <Label>Push-уведомления</Label>
+                <p className="text-sm text-gray-500">Получать уведомления в приложении</p>
+              </div>
+              <Switch
+                checked={settings.notifications}
+                onCheckedChange={(checked) => setSettings({ ...settings, notifications: checked })}
+              />
+            </div>
+
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <Label>Ежедневный гороскоп</Label>
+                <p className="text-sm text-gray-500">Получать персональный гороскоп каждый день</p>
+              </div>
+              <Switch
+                checked={settings.dailyHoroscope}
+                onCheckedChange={(checked) => setSettings({ ...settings, dailyHoroscope: checked })}
+              />
+            </div>
+
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <Label>Email-рассылка</Label>
+                <p className="text-sm text-gray-500">Получать новости и обновления на email</p>
+              </div>
+              <Switch
+                checked={settings.emailUpdates}
+                onCheckedChange={(checked) => setSettings({ ...settings, emailUpdates: checked })}
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Privacy & Security */}
+        <Card className="bg-white/95 backdrop-blur-sm border-0 shadow-xl">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <Shield className="h-5 w-5 text-green-600" />
+              Приватность и безопасность
+            </CardTitle>
+            <CardDescription>Управление данными и безопасностью аккаунта</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="p-4 bg-purple-50 rounded-lg">
+              <h4 className="font-medium text-gray-900 mb-2">Данные аккаунта</h4>
+              <p className="text-sm text-gray-600 mb-3">
+                Ваши данные хранятся безопасно и используются только для предоставления астрологических услуг.
+              </p>
+              <Button variant="outline" size="sm" className="bg-white">
+                Скачать мои данные
+              </Button>
+            </div>
+
+            <Separator />
+
+            <div className="p-4 bg-red-50 rounded-lg">
+              <h4 className="font-medium text-red-900 mb-2 flex items-center gap-2">
+                <Trash2 className="h-4 w-4" />
+                Опасная зона
+              </h4>
+              <p className="text-sm text-red-700 mb-3">Удаление аккаунта необратимо. Все ваши данные будут удалены.</p>
+              <Button variant="destructive" size="sm">
+                Удалить аккаунт
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Save Button */}
+        <div className="pt-4 pb-8">
+          <Button
+            onClick={handleSave}
+            disabled={saving}
+            className="w-full bg-gray-900 hover:bg-gray-800 text-white py-4 text-lg font-semibold rounded-2xl shadow-xl"
+          >
+            {saving ? "Сохранение..." : "Сохранить настройки"}
+          </Button>
         </div>
+      </div>
 
-        <div className="space-y-6">
-          {/* Profile Settings */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <User className="h-5 w-5" />
-                Профиль
-              </CardTitle>
-              <CardDescription>Основная информация о вашем профиле</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="fullName">Полное имя</Label>
-                <Input
-                  id="fullName"
-                  value={settings.fullName}
-                  onChange={(e) => setSettings({ ...settings, fullName: e.target.value })}
-                  placeholder="Введите ваше имя"
-                />
-              </div>
+      {/* Bottom Navigation */}
+      <div className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-t border-gray-200/50 shadow-lg">
+        <div className="flex items-center justify-around py-3 px-4">
+          <Link href="/chart/create" className="flex flex-col items-center py-2 px-4">
+            <Sparkles className="h-7 w-7 text-gray-600" />
+            <span className="text-xs text-gray-600 mt-1 font-medium">Карта</span>
+          </Link>
 
-              <div className="space-y-2">
-                <Label>Email</Label>
-                <Input value={user?.email || ""} disabled />
-                <p className="text-sm text-gray-500">Email нельзя изменить</p>
-              </div>
-            </CardContent>
-          </Card>
+          <Link href="/compatibility" className="flex flex-col items-center py-2 px-4">
+            <Heart className="h-7 w-7 text-gray-600" />
+            <span className="text-xs text-gray-600 mt-1 font-medium">Совместимость</span>
+          </Link>
 
-          {/* Notification Settings */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Bell className="h-5 w-5" />
-                Уведомления
-              </CardTitle>
-              <CardDescription>Настройте, какие уведомления вы хотите получать</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label>Push-уведомления</Label>
-                  <p className="text-sm text-gray-500">Получать уведомления в приложении</p>
-                </div>
-                <Switch
-                  checked={settings.notifications}
-                  onCheckedChange={(checked) => setSettings({ ...settings, notifications: checked })}
-                />
-              </div>
+          <Link href="/more" className="flex flex-col items-center py-2 px-4">
+            <MoreHorizontal className="h-7 w-7 text-gray-600" />
+            <span className="text-xs text-gray-600 mt-1 font-medium">Еще</span>
+          </Link>
 
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label>Ежедневный гороскоп</Label>
-                  <p className="text-sm text-gray-500">Получать персональный гороскоп каждый день</p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Badge variant="secondary" className="text-xs">
-                    Скоро
-                  </Badge>
-                  <Switch
-                    checked={settings.dailyHoroscope}
-                    onCheckedChange={(checked) => setSettings({ ...settings, dailyHoroscope: checked })}
-                    disabled
-                  />
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label>Email-рассылка</Label>
-                  <p className="text-sm text-gray-500">Получать новости и обновления на email</p>
-                </div>
-                <Switch
-                  checked={settings.emailUpdates}
-                  onCheckedChange={(checked) => setSettings({ ...settings, emailUpdates: checked })}
-                />
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Appearance Settings */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Palette className="h-5 w-5" />
-                Внешний вид
-              </CardTitle>
-              <CardDescription>Настройте внешний вид приложения</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label>Темная тема</Label>
-                  <p className="text-sm text-gray-500">Использовать темную тему интерфейса</p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Badge variant="secondary" className="text-xs">
-                    Скоро
-                  </Badge>
-                  <Switch
-                    checked={settings.darkMode}
-                    onCheckedChange={(checked) => setSettings({ ...settings, darkMode: checked })}
-                    disabled
-                  />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Privacy & Security */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Shield className="h-5 w-5" />
-                Приватность и безопасность
-              </CardTitle>
-              <CardDescription>Управление данными и безопасностью аккаунта</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="p-4 bg-gray-50 rounded-lg">
-                <h4 className="font-medium text-gray-900 mb-2">Данные аккаунта</h4>
-                <p className="text-sm text-gray-600 mb-3">
-                  Ваши данные хранятся безопасно и используются только для предоставления астрологических услуг.
-                </p>
-                <Button variant="outline" size="sm">
-                  Скачать мои данные
-                </Button>
-              </div>
-
-              <Separator />
-
-              <div className="p-4 bg-red-50 rounded-lg">
-                <h4 className="font-medium text-red-900 mb-2 flex items-center gap-2">
-                  <Trash2 className="h-4 w-4" />
-                  Опасная зона
-                </h4>
-                <p className="text-sm text-red-700 mb-3">
-                  Удаление аккаунта необратимо. Все ваши данные будут удалены.
-                </p>
-                <Button variant="destructive" size="sm">
-                  Удалить аккаунт
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Save Button */}
-          <div className="flex justify-end">
-            <Button onClick={handleSave} disabled={saving} className="bg-indigo-600 hover:bg-indigo-700">
-              {saving ? "Сохранение..." : "Сохранить настройки"}
-            </Button>
-          </div>
+          <Link href="/settings" className="flex flex-col items-center py-2 px-4">
+            <Settings className="h-7 w-7 text-purple-600" />
+            <span className="text-xs text-gray-900 mt-1 font-medium">Настройки</span>
+          </Link>
         </div>
       </div>
     </div>
